@@ -1,0 +1,26 @@
+{
+	"latitude": 0.0,
+	"longitude": 0.0,
+	"Forward warning": {
+		"directions": [
+			"Good",
+			"Right",
+			"Left",
+			"Up"
+		],
+		"Distance": 0.0
+	},
+	"Lane departure warning": [
+		"Right",
+		"Left"
+	],
+	"Pedestrian & cyclist collision warning": 0.0,
+	"Speed": {
+		"Current speed": 0,
+		"Speed allowed": 0,
+		"Speed above limit": false
+	},
+	"Sudden braking": false,
+	"Distance traveled mile": 0.0,
+	"Time": "Wed Oct 26 2022 17:09:50 GMT+0300 (Israel Daylight Time)"
+}
