@@ -1,16 +1,13 @@
 const express = require("express");
 const dateAndTime = require('date-and-time');
 const RandomInformation = require('../modules/DataToSend');
-//const createToken = require("../modules/userModel");
 const jwt = require("jsonwebtoken");
-//const { config } = require("../config/secret");
 const dboperations = require('../modules/userModel');
 require('dotenv').config();
 const router = express.Router();
 const random = new RandomInformation.RandomData();
 const now = new Date();
 const { auth } = require("../middlewares/auth");
-const { user } = require("../config/dbconfig");
 
 
 
