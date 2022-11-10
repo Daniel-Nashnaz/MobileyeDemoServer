@@ -72,4 +72,9 @@ router.post('/', (request, response) => {
 
 });
 
+router.post('/aaa', (request, response) => {
+    console.log(request.body);
+    response.sendStatus(200);
+});
+
 module.exports = router;

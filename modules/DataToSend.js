@@ -16,7 +16,7 @@ exports.RandomData = class {
 
     constructor() {
         this.stopwatch();
-        setInterval(() => { indexOfLocation++ }, 5000);
+        setInterval(() => { indexOfLocation++; }, 5000);
     }
 
     get timeFormBeginning() {
