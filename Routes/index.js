@@ -76,5 +76,17 @@ router.post('/aaa', (request, response) => {
     console.log(request.body);
     response.sendStatus(200);
 });
+router.get('/testInput',(request, response) => {
+    dboperations.callSPInput("Daniel").then(result => {
+        console.log(result);
+    });
+    response.sendStatus(200);
+});
 
+router.get('/testOutput',(request, response) => {
+    dboperations.callSPOut().then(result => {
+        console.log(result);
+    });
+    response.sendStatus(200);
+});
 module.exports = router;

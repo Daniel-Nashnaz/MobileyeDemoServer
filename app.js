@@ -6,7 +6,7 @@ const app = express();
 const cors = require('cors')
 
 const { routesInit } = require('./Routes/configurations');
-
+//console.log(process.env.user);
 //infromation in json
 app.use(express.json());
 app.use(cors())

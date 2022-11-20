@@ -30,8 +30,72 @@ async function getUser(userId, vehicleNumber) {
     console.log(error);
   }
 }
+async function callSPInput(name) {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('Name', name)
+      .execute(`SearchEmployee`);
+    return result.recordset;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+async function callSPOut() {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .output('Count', 0)
+      .output('Max', 0)
+      .output('Min', 0)
+      .output('Average', 0)
+      //or
+      .output('Sum')
+      .execute(`GetEmployeesStatus`);
+    const status = {
+      Count: +result.output.Count,
+      Max: +result.output.Max,
+      Min: +result.output.Min,
+      Average: +result.output.Average,
+      Sum: +result.output.Sum
+    };
+    return status;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+async function insertDataOfDrive(dataFromCar){
+  const data = JSON.parse(dataFromCar);
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+    .input('tripID',1 )
+    .input('timeFromBeginning',data.TimeFromBeginning)
+    .input('lat',data.Latitude )
+    .input('lon', data.Longitude)
+    .input('forwardWarningDirection',data.ForwardWarning.Directions )
+    .input('forwardWarningDistance',data.ForwardWarning.Distance )
+    .input('laneDepartureWarning',data.LaneDepartureWarning )
+    .input('pedestrianAndCyclistCollisionWarning',data.Pedestrian&CyclistCollisionWarning )
+    .input('suddenBraking',data.SuddenBraking)
+    .input('speedAllowed',data.Speed.SpeedAllowed )
+    .input('currentSpeed',data.Speed.CurrentSpeed  )
+    .input('distanceTraveledMile',data.DistanceTraveledMile )
+    .output('ret')
+    .execute(`SearchEmployee`);
+  return result.recordset;
+}
 
 module.exports = {
   getUser: getUser,
   getUserName: getUserName,
+  callSPInput: callSPInput,
+  callSPOut: callSPOut,
 }

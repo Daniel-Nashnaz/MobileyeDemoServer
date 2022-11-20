@@ -1,6 +1,6 @@
 const config = {
-    user: process.env.user,
-    password: process.env.password,
+    user: "daniel",//process.env.user,
+    password: "7624",//process.env.password,
     server: '127.0.0.1',
     database: 'DrivingControl',
     options: {
