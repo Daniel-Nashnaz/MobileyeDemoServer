@@ -71,26 +71,29 @@ async function callSPOut() {
 }
 
 
-async function insertDataOfDrive(dataFromCar){
-  const data = JSON.parse(dataFromCar);
+async function insertDataOfDrive(dataFromCar) {
+  const data = dataFromCar;
   try {
     let pool = await sql.connect(config);
     const result = await pool.request()
-    .input('tripID',1 )
-    .input('timeFromBeginning',data.TimeFromBeginning)
-    .input('lat',data.Latitude )
-    .input('lon', data.Longitude)
-    .input('forwardWarningDirection',data.ForwardWarning.Directions )
-    .input('forwardWarningDistance',data.ForwardWarning.Distance )
-    .input('laneDepartureWarning',data.LaneDepartureWarning )
-    .input('pedestrianAndCyclistCollisionWarning',data.Pedestrian&CyclistCollisionWarning )
-    .input('suddenBraking',data.SuddenBraking)
-    .input('speedAllowed',data.Speed.SpeedAllowed )
-    .input('currentSpeed',data.Speed.CurrentSpeed  )
-    .input('distanceTraveledMile',data.DistanceTraveledMile )
-    .output('ret')
-    .execute(`SearchEmployee`);
-  return result.recordset;
+      .input('tripID', 1)//to do it you get json
+      .input('timeFromBeginning', data.TimeFromBeginning)
+      .input('lat', data.Latitude)
+      .input('lon', data.Longitude)
+      .input('forwardWarningDirection', data.ForwardWarning.Directions)
+      .input('forwardWarningDistance', data.ForwardWarning.Distance)
+      .input('laneDepartureWarning', data.LaneDepartureWarning)
+      .input('pedestrianAndCyclistCollisionWarning', data.PedestrianAndCyclistCollisionWarning)
+      .input('suddenBraking', data.SuddenBraking)
+      .input('speedAllowed', data.Speed.SpeedAllowed)
+      .input('currentSpeed', data.Speed.CurrentSpeed)
+      .input('distanceTraveledMile', data.DistanceTraveledMile)
+      .output('ret')
+      .execute(`InsertInformationInRealTime`);
+    return result.recordset;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
@@ -98,4 +101,5 @@ module.exports = {
   getUserName: getUserName,
   callSPInput: callSPInput,
   callSPOut: callSPOut,
+  insertDataOfDrive:insertDataOfDrive
 }

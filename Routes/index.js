@@ -27,7 +27,7 @@ router.get('/', auth, (request, response) => {
         },
         "LaneDepartureWarning": random.getLaneDepartureWarning(),
         //in meters
-        "Pedestrian&CyclistCollisionWarning": random.getCollisionWarning(directions),
+        "PedestrianAndCyclistCollisionWarning": random.getCollisionWarning(directions),
         "Speed": {
             "SpeedAllowed": allowed,
             "CurrentSpeed": current,
@@ -74,10 +74,12 @@ router.post('/', (request, response) => {
 
 router.post('/aaa', (request, response) => {
     console.log(request.body);
+    dboperations.insertDataOfDrive(request.body);
     response.sendStatus(200);
 });
+
 router.get('/testInput',(request, response) => {
-    dboperations.callSPInput("Daniel").then(result => {
+    dboperations.callSPInput("dan12").then(result => {
         console.log(result);
     });
     response.sendStatus(200);
@@ -88,5 +90,7 @@ router.get('/testOutput',(request, response) => {
         console.log(result);
     });
     response.sendStatus(200);
+
 });
+
 module.exports = router;
