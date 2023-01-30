@@ -9,7 +9,19 @@ const { routesInit } = require('./Routes/configurations');
 //console.log(process.env.user);
 //infromation in json
 app.use(express.json());
-app.use(cors())
+
+const whitelist = ["http://localhost:3000"]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
+}
+app.use(cors(corsOptions))
 
 //Go to file public and get data
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,6 +31,6 @@ routesInit(app);
 
 const server = http.createServer(app);
 
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 3500;
 
 server.listen(port);

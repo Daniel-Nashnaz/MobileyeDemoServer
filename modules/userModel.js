@@ -71,6 +71,41 @@ async function callSPOut() {
 }
 
 
+
+async function callSPthatEndTravel(data) {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('tripId',data.tripId)
+      .output('statusReturn')
+      .execute(`AddEndToTravel`);
+      const status= {
+        status:result.output.statusReturn
+      };
+      return status;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+async function callSPTathAddTravel(details) {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('userNameOrEmail', details.userNameOrEmail)
+      .input('nuberOfVehicle', details.numVehicle)
+      .output('statusReturn')
+      .execute(`AddTravel`);
+    const status = {
+      tripID:+result.output.statusReturn
+    };
+    return status;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function insertDataOfDrive(dataFromCar) {
   const data = dataFromCar;
   try {
@@ -101,5 +136,7 @@ module.exports = {
   getUserName: getUserName,
   callSPInput: callSPInput,
   callSPOut: callSPOut,
-  insertDataOfDrive:insertDataOfDrive
+  insertDataOfDrive:insertDataOfDrive,
+  callSPTathAddTravel:callSPTathAddTravel,
+  callSPthatEndTravel:callSPthatEndTravel
 }
