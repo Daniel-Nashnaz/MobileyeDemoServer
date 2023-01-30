@@ -72,24 +72,52 @@ router.post('/', (request, response) => {
 
 });
 
-router.post('/aaa', (request, response) => {
-    console.log(request.body);
-    dboperations.insertDataOfDrive(request.body);
+router.post('/dataFromSensor', (request, response) => {
+    dboperations.insertDataOfDrive(request.body).then(res => {
+        console.log(res)
+    });
     response.sendStatus(200);
 });
 
-router.get('/testInput',(request, response) => {
+router.get('/testInput', (request, response) => {
     dboperations.callSPInput("dan12").then(result => {
         console.log(result);
     });
     response.sendStatus(200);
 });
 
-router.get('/testOutput',(request, response) => {
+router.get('/testOutput', (request, response) => {
     dboperations.callSPOut().then(result => {
         console.log(result);
     });
     response.sendStatus(200);
+
+});
+
+//get in body tridId
+router.post('/endTravel', (request, response) => {
+    const data = request.body;
+    if (data.tripId == null || data == null) {
+        return response.status(406).json({ "error": "must send trip ID" });
+    }
+
+    dboperations.callSPthatEndTravel(data).then(result => {
+        console.log(result);
+        return response.status(200).json(result);
+    });
+
+});
+
+//get from body  username and number vehicle and save in table Travel.
+router.post('/addTravel', (request, response) => {
+    const data = request.body;
+    if (data.userNameOrEmail == null || data.numVehicle == null || data == null) {
+
+        return response.status(406).json({ "error": "must send userName Or Email and number Vehicle" });
+    }
+    dboperations.callSPTathAddTravel(data).then(result => {
+        return response.status(200).json(result);
+    });
 
 });
 
