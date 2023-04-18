@@ -72,7 +72,7 @@ async function callSPOut() {
 
 
 
-async function callSPthatEndTravel(data) {
+async function callSPThatEndTravel(data) {
   try {
     let pool = await sql.connect(config);
     const result = await pool.request()
@@ -111,7 +111,7 @@ async function insertDataOfDrive(dataFromCar) {
   try {
     let pool = await sql.connect(config);
     const result = await pool.request()
-      .input('tripID', 1)//to do it you get json
+      .input('tripID', data.About.TripID)//to do it you get json
       .input('timeFromBeginning', data.TimeFromBeginning)
       .input('lat', data.Latitude)
       .input('lon', data.Longitude)
@@ -125,7 +125,7 @@ async function insertDataOfDrive(dataFromCar) {
       .input('distanceTraveledMile', data.DistanceTraveledMile)
       .output('ret')
       .execute(`InsertInformationInRealTime`);
-    return result.recordset;
+    return result;
   } catch (error) {
     console.log(error);
   }
@@ -138,5 +138,5 @@ module.exports = {
   callSPOut: callSPOut,
   insertDataOfDrive:insertDataOfDrive,
   callSPTathAddTravel:callSPTathAddTravel,
-  callSPthatEndTravel:callSPthatEndTravel
+  callSPThatEndTravel:callSPThatEndTravel
 }

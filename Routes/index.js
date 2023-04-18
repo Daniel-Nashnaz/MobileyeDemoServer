@@ -101,7 +101,7 @@ router.post('/endTravel', (request, response) => {
         return response.status(406).json({ "error": "must send trip ID" });
     }
 
-    dboperations.callSPthatEndTravel(data).then(result => {
+    dboperations.callSPThatEndTravel(data).then(result => {
         console.log(result);
         return response.status(200).json(result);
     });
