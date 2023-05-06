@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+//const jwt = require("jsonwebtoken");
 ///const { config } = require("../config/secret")
 const config = require("../config/dbconfig")
 const sql = require('mssql');
@@ -28,48 +28,25 @@ async function getUser(userId, vehicleNumber) {
   }
   catch (error) {
     console.log(error);
+  }finally{
+    await sql.close();
   }
 }
-async function callSPInput(name) {
+
+async function callSPOfStatistics(tripId) {
   try {
     let pool = await sql.connect(config);
     const result = await pool.request()
-      .input('Name', name)
-      .execute(`SearchEmployee`);
+      .input('tripId', sql.Int, tripId)
+      .execute(`GetAllStatisticsOfTravel`);
     return result.recordset;
 
   } catch (error) {
     console.log(error);
+  }finally{
+    await sql.close();
   }
 }
-
-
-
-
-async function callSPOut() {
-  try {
-    let pool = await sql.connect(config);
-    const result = await pool.request()
-      .output('Count', 0)
-      .output('Max', 0)
-      .output('Min', 0)
-      .output('Average', 0)
-      //or
-      .output('Sum')
-      .execute(`GetEmployeesStatus`);
-    const status = {
-      Count: +result.output.Count,
-      Max: +result.output.Max,
-      Min: +result.output.Min,
-      Average: +result.output.Average,
-      Sum: +result.output.Sum
-    };
-    return status;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 
 
 async function callSPThatEndTravel(data) {
@@ -85,6 +62,8 @@ async function callSPThatEndTravel(data) {
       return status;
   } catch (error) {
     console.log(error);
+  }finally{
+    await sql.close();
   }
 }
 
@@ -103,6 +82,8 @@ async function callSPTathAddTravel(details) {
     return status;
   } catch (error) {
     console.log(error);
+  }finally{
+    await sql.close();
   }
 }
 
@@ -128,15 +109,36 @@ async function insertDataOfDrive(dataFromCar) {
     return result;
   } catch (error) {
     console.log(error);
+  }finally{
+    await sql.close();
+  }
+}
+
+async function callSPThatSetScore(data) {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('tripId',data.tripId)
+      .input('score',data.score)
+      .output('statusReturn')
+      .execute(`SetScore`);
+      const status= {
+        status:result.output.statusReturn
+      };
+      return status;
+  } catch (error) {
+    console.log(error);
+  }finally{
+    await sql.close();
   }
 }
 
 module.exports = {
   getUser: getUser,
   getUserName: getUserName,
-  callSPInput: callSPInput,
-  callSPOut: callSPOut,
+  callSPOfStatistics: callSPOfStatistics,
   insertDataOfDrive:insertDataOfDrive,
   callSPTathAddTravel:callSPTathAddTravel,
-  callSPThatEndTravel:callSPThatEndTravel
+  callSPThatEndTravel:callSPThatEndTravel,
+  callSPThatSetScore,callSPThatSetScore
 }
