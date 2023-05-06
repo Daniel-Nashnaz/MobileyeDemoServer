@@ -1,6 +1,7 @@
+require('dotenv').config();
 const config = {
-    user: "daniel",//process.env.user,
-    password: "4257",//process.env.password,
+    user: process.env.user,
+    password: process.env.password,
     server: '127.0.0.1',
     database: 'DrivingControl',
     options: {

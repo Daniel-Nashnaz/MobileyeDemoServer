@@ -3,6 +3,7 @@ const dateAndTime = require('date-and-time');
 const RandomInformation = require('../modules/DataToSend');
 const jwt = require("jsonwebtoken");
 const dboperations = require('../modules/userModel');
+const func = require('../modules/analysis');
 require('dotenv').config();
 const router = express.Router();
 const random = new RandomInformation.RandomData();
@@ -74,16 +75,19 @@ router.post('/', (request, response) => {
 
 router.post('/dataFromSensor', (request, response) => {
     dboperations.insertDataOfDrive(request.body).then(res => {
-        console.log(res)
+        console.log(request.body)
     });
     response.sendStatus(200);
 });
 
-router.get('/testInput', (request, response) => {
-    dboperations.callSPInput("dan12").then(result => {
-        console.log(result);
-    });
-    response.sendStatus(200);
+router.get('/getAllStatistics', (request, response) => {
+   /* dboperations.callSPOfStatistics().then(result => {
+        const data = result[0];
+        dboperations.callSPThatSetScore(func.generateScore(data)).then(x => {
+            console.log(x);
+        });
+        response.json(data).status(200);
+    });*/
 });
 
 router.get('/testOutput', (request, response) => {
@@ -102,7 +106,15 @@ router.post('/endTravel', (request, response) => {
     }
 
     dboperations.callSPThatEndTravel(data).then(result => {
-        console.log(result);
+        dboperations.callSPOfStatistics(data.tripId).then(result => {
+            const data = result[0];
+            dboperations.callSPThatSetScore(func.generateScore(data)).then(result => {
+               // console.log(result);
+                //console.log(data);
+
+                //response.json(data).status(200);
+            });
+        });        
         return response.status(200).json(result);
     });
 
