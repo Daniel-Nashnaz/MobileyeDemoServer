@@ -62,8 +62,6 @@ async function callSPThatEndTravel(data) {
       return status;
   } catch (error) {
     console.log(error);
-  }finally{
-    await sql.close();
   }
 }
 
@@ -90,6 +88,41 @@ async function callSPTathAddTravel(details) {
 async function insertDataOfDrive(dataFromCar) {
   const data = dataFromCar;
   try {
+    // Create a connection pool
+    await sql.connect(config);
+
+    // Create a new request object
+    const request = new sql.Request();
+
+    // Set the input parameters
+    request.input('tripID', sql.Int, data.About.TripID);
+    request.input('timeFromBeginning', sql.NVarChar(20), data.TimeFromBeginning);
+    request.input('lat', sql.Float, data.Latitude);
+    request.input('lon', sql.Float, data.Longitude);
+    request.input('forwardWarningDirection', sql.NVarChar(20),data.ForwardWarning.Directions.toString());
+    request.input('forwardWarningDistance', sql.NVarChar(10), data.ForwardWarning.Distance.toString());
+    request.input('laneDepartureWarning', sql.NVarChar(20), data.LaneDepartureWarning.toString());
+    request.input('pedestrianAndCyclistCollisionWarning', sql.NVarChar(10), data.PedestrianAndCyclistCollisionWarning.toString());
+    request.input('suddenBraking', sql.Bit, data.SuddenBraking);
+    request.input('speedAllowed', sql.Int, data.Speed.SpeedAllowed);
+    request.input('currentSpeed', sql.Int, data.Speed.CurrentSpeed);
+    request.input('distanceTraveledMile', sql.Float, data.DistanceTraveledMile);
+    request.output('ret', sql.Int);
+
+    // Execute the stored procedure
+    const result = await request.execute('InsertInformationInRealTime');
+
+    // Get the output parameter value
+    const retValue = result.output.ret;
+    console.log('Return value:', retValue);
+  } catch (err) {
+    console.error('Error:', err.message);
+  } finally {
+    // Close the connection pool
+    await sql.close();
+  }
+  /*try {
+    console.log("start");
     let pool = await sql.connect(config);
     const result = await pool.request()
       .input('tripID', data.About.TripID)//to do it you get json
@@ -106,13 +139,22 @@ async function insertDataOfDrive(dataFromCar) {
       .input('distanceTraveledMile', data.DistanceTraveledMile)
       .output('ret')
       .execute(`InsertInformationInRealTime`);
+      console.log(result);
     return result;
   } catch (error) {
     console.log(error);
   }finally{
     await sql.close();
-  }
+  }*/
+
 }
+
+
+
+
+
+
+
 
 async function callSPThatSetScore(data) {
   try {
@@ -140,5 +182,5 @@ module.exports = {
   insertDataOfDrive:insertDataOfDrive,
   callSPTathAddTravel:callSPTathAddTravel,
   callSPThatEndTravel:callSPThatEndTravel,
-  callSPThatSetScore,callSPThatSetScore
+  callSPThatSetScore:callSPThatSetScore,
 }

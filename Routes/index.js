@@ -73,22 +73,15 @@ router.post('/', (request, response) => {
 
 });
 
-router.post('/dataFromSensor', (request, response) => {
-    dboperations.insertDataOfDrive(request.body).then(res => {
-        console.log(request.body)
-    });
+//check that you get proper json if it doesn't work...
+router.post('/dataFromSensor', async (request, response) => {
+    console.log(request.body);
+    const res = await dboperations.insertDataOfDrive(request.body);
     response.sendStatus(200);
 });
 
-router.get('/getAllStatistics', (request, response) => {
-   /* dboperations.callSPOfStatistics().then(result => {
-        const data = result[0];
-        dboperations.callSPThatSetScore(func.generateScore(data)).then(x => {
-            console.log(x);
-        });
-        response.json(data).status(200);
-    });*/
-});
+
+
 
 router.get('/testOutput', (request, response) => {
     dboperations.callSPOut().then(result => {
@@ -105,18 +98,17 @@ router.post('/endTravel', (request, response) => {
         return response.status(406).json({ "error": "must send trip ID" });
     }
 
-    dboperations.callSPThatEndTravel(data).then(result => {
-        dboperations.callSPOfStatistics(data.tripId).then(result => {
-            const data = result[0];
-            dboperations.callSPThatSetScore(func.generateScore(data)).then(result => {
-               // console.log(result);
-                //console.log(data);
-
-                //response.json(data).status(200);
-            });
-        });        
-        return response.status(200).json(result);
-    });
+     dboperations.callSPThatEndTravel(data).then(result => {
+         console.log(data.tripId);
+         dboperations.callSPOfStatistics(data.tripId).then(result => {
+             const data = result[0];
+             console.log(data);
+             dboperations.callSPThatSetScore(func.generateScore(data)).then(result => {
+                 console.log(result);
+             });
+         });        
+         return response.status(200).json(result);
+     });
 
 });
 
