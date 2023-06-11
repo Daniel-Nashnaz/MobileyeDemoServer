@@ -10,7 +10,7 @@ const { routesInit } = require('./Routes/configurations');
 //infromation in json
 app.use(express.json());
 
-const whitelist = ["http://localhost:3000"]
+const whitelist = ["http://localhost:3001"]
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
