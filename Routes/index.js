@@ -3,7 +3,8 @@ const dateAndTime = require('date-and-time');
 const RandomInformation = require('../modules/DataToSend');
 const jwt = require("jsonwebtoken");
 const dboperations = require('../modules/userModel');
-const func = require('../modules/analysis');
+const funcAnalysis = require('../modules/analysis');
+const funcEcosystem = require('../modules/ecosystemGrade');
 require('dotenv').config();
 const router = express.Router();
 const random = new RandomInformation.RandomData();
@@ -98,17 +99,27 @@ router.post('/endTravel', (request, response) => {
         return response.status(406).json({ "error": "must send trip ID" });
     }
 
-     dboperations.callSPThatEndTravel(data).then(result => {
-         console.log(data.tripId);
-         dboperations.callSPOfStatistics(data.tripId).then(result => {
-             const data = result[0];
-             console.log(data);
-             dboperations.callSPThatSetScore(func.generateScore(data)).then(result => {
-                 console.log(result);
-             });
-         });        
-         return response.status(200).json(result);
-     });
+    dboperations.callSPThatEndTravel(data).then(result => {
+        const tripID = data.tripId;
+        console.log(tripID);
+        dboperations.callSPOfRealTimeInfoByTripId(tripID).then(data => {
+            if (data.length === 0) {
+                return;
+            }
+            funcEcosystem.tripEcological(data);
+        })
+
+
+
+        dboperations.callSPOfStatistics(tripID).then(result => {
+            const data = result[0];
+            console.log(data);
+            dboperations.callSPThatSetScore(funcAnalysis.generateScore(data)).then(result => {
+                console.log(result);
+            });
+        });  
+        return response.status(200).json(result);
+    });
 
 });
 

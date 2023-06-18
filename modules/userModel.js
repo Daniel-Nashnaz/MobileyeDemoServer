@@ -149,13 +149,6 @@ async function insertDataOfDrive(dataFromCar) {
 
 }
 
-
-
-
-
-
-
-
 async function callSPThatSetScore(data) {
   try {
     let pool = await sql.connect(config);
@@ -175,6 +168,27 @@ async function callSPThatSetScore(data) {
   }
 }
 
+
+async function callSPOfRealTimeInfoByTripId(tripId) {
+  try {
+    let pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('tripId', sql.Int, tripId)
+      .query`SELECT * FROM dbo.GetAllRealTimeInfoByTripId(@tripId)`;
+    return result.recordset;
+
+  } catch (error) {
+    console.log(error);
+  }  finally {
+    // Close the connection pool
+    await sql.close();
+  }
+}
+
+
+
+
+
 module.exports = {
   getUser: getUser,
   getUserName: getUserName,
@@ -183,4 +197,6 @@ module.exports = {
   callSPTathAddTravel:callSPTathAddTravel,
   callSPThatEndTravel:callSPThatEndTravel,
   callSPThatSetScore:callSPThatSetScore,
+  callSPOfRealTimeInfoByTripId,callSPOfRealTimeInfoByTripId,
+
 }
