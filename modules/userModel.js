@@ -1,5 +1,4 @@
 //const jwt = require("jsonwebtoken");
-///const { config } = require("../config/secret")
 const config = require("../config/dbconfig")
 const sql = require('mssql');
 
@@ -80,8 +79,6 @@ async function callSPTathAddTravel(details) {
     return status;
   } catch (error) {
     console.log(error);
-  }finally{
-    await sql.close();
   }
 }
 
@@ -163,8 +160,6 @@ async function callSPThatSetScore(data) {
       return status;
   } catch (error) {
     console.log(error);
-  }finally{
-    await sql.close();
   }
 }
 
